@@ -1,0 +1,12 @@
+.board {
+    margin: auto;
+    border: 2px solid #000;
+    outline: none;
+    background-color: #ddd;
+    overflow: hidden;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+}
