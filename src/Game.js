@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import Cells from "./Cells";
 
-import { START, BODY, FOOD, KEYS, ROWS, COLS, DIRS } from "./const";
+import { START, BODY, FOOD, KEYS, ROWS, COLS, DIRS } from "./config";
 import "./style.css";
 
 class Game extends Component {
@@ -46,9 +46,17 @@ class Game extends Component {
     frame() {
         let { snake, board, direction } = this.state;
 
-        const head = this.getNextIndex(snake[0], direction);
+        const snakeHead = this.getNextIndex(snake[0], direction);
 
-        const food = board[head] === FOOD || snake.length === 1;
+        const food = board[snakeHead] === FOOD || snake.length === 1;
+
+        if (snake.indexOf(snakeHead) !== -1) {
+            this.setState({
+                gameOver: true,
+            });
+
+            return;
+        }
 
         if (food) {
             const maxCells = ROWS * COLS;
@@ -64,8 +72,8 @@ class Game extends Component {
             board[snake.pop()] = null;
         }
 
-        board[head] = BODY;
-        snake.unshift(head);
+        board[snakeHead] = BODY;
+        snake.unshift(snakeHead);
 
         if (this.nextDirection) {
             direction = this.nextDirection;
@@ -93,11 +101,11 @@ class Game extends Component {
         }
     };
 
-    getNextIndex(head, direction) {
-        let x = head % COLS;
-        let y = Math.floor(head / COLS);
+    getNextIndex(snakeHead, snakeDirection) {
+        let x = snakeHead % COLS;
+        let y = Math.floor(snakeHead / COLS);
 
-        switch (direction) {
+        switch (snakeDirection) {
             case KEYS.up:
                 y = y <= 0 ? ROWS - 1 : y - 1;
                 break;

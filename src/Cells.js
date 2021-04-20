@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ROWS, COLS, CELL, BODY, FOOD } from "./const";
+import { ROWS, COLS, CELL, BODY, FOOD } from "./config";
 
 function Cells({ handleKey, board }) {
     const cells = [];
