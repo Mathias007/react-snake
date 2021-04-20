@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import Cells from "./Cells";
 
-import { START, BODY, FOOD, KEYS, ROWS, COLS } from "./const";
+import { START, BODY, FOOD, KEYS, ROWS, COLS, DIRS } from "./const";
 import "./style.css";
 
 class Game extends Component {
@@ -18,6 +18,7 @@ class Game extends Component {
 
         this.frame = this.frame.bind(this);
         this.start = this.start.bind(this);
+        this.handleKey = this.handleKey.bind(this);
     }
 
     componentDidMount() {
@@ -43,19 +44,54 @@ class Game extends Component {
     }
 
     frame() {
-        const { snake, board, direction } = this.state;
+        let { snake, board, direction } = this.state;
 
         const head = this.getNextIndex(snake[0], direction);
+
+        const food = board[head] === FOOD || snake.length === 1;
+
+        if (food) {
+            const maxCells = ROWS * COLS;
+
+            let i;
+
+            do {
+                i = Math.floor(Math.random() * maxCells);
+            } while (board[i]);
+
+            board[i] = FOOD;
+        } else {
+            board[snake.pop()] = null;
+        }
 
         board[head] = BODY;
         snake.unshift(head);
 
-        board[snake.pop()] = null;
+        if (this.nextDirection) {
+            direction = this.nextDirection;
+            this.nextDirection = null;
+        }
 
-        this.setState({ board, snake }, () => {
+        this.setState({ board, snake, direction }, () => {
             setTimeout(this.frame, 200);
         });
     }
+
+    handleKey = (event) => {
+        const actualDirection = event.nativeEvent.keyCode;
+
+        const differenceBetweenDirections = Math.abs(
+            this.state.direction - actualDirection
+        );
+
+        if (
+            DIRS[actualDirection] &&
+            differenceBetweenDirections !== 0 &&
+            differenceBetweenDirections !== 2
+        ) {
+            this.nextDirection = actualDirection;
+        }
+    };
 
     getNextIndex(head, direction) {
         let x = head % COLS;
@@ -87,7 +123,7 @@ class Game extends Component {
 
     render() {
         const { board } = this.state;
-        return <Cells board={board} />;
+        return <Cells handleKey={this.handleKey} board={board} />;
     }
 }
 

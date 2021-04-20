@@ -2,7 +2,7 @@ import React from "react";
 
 import { ROWS, COLS, CELL, BODY, FOOD } from "./const";
 
-function Cells({ board }) {
+function Cells({ handleKey, board }) {
     const cells = [];
 
     for (let row = 0; row < ROWS; row++) {
@@ -15,7 +15,14 @@ function Cells({ board }) {
                     : value === FOOD
                     ? "food-cell"
                     : "cell";
-            cells.push(<div key={key} className={className} />);
+            cells.push(
+                <div
+                    key={key}
+                    tabIndex={0}
+                    onKeyDown={handleKey}
+                    className={className}
+                />
+            );
         }
     }
 
