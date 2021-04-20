@@ -6,7 +6,15 @@
     overflow: hidden;
 }
 
-.cell {
+.cell,
+.body-cell {
     width: 30px;
     height: 30px;
+    float: left;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.body-cell {
+    background: blue;
 }
